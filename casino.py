@@ -1,18 +1,21 @@
+from abc import ABC, abstractmethod
+from accountant import Accountant
+from date import Date
 from typing import Optional
 
-
-class Casino:
+class Casino(ABC):
     DEFAULT_GAME_NUM = 0
-    DEFAULT_DATE = None  # To be replaced with a default Date instance if needed
-    DEFAULT_ACCOUNTANT = None  # To be replaced with a default Accountant instance if needed
+    DEFAULT_DATE = Date()
+    DEFAULT_ACCOUNTANT = Accountant()
 
     def __init__(self, game_number=DEFAULT_GAME_NUM, date=None, accountant=None):
         # Assign default instances if not provided
         date = date or Casino.DEFAULT_DATE
         accountant = accountant or Casino.DEFAULT_ACCOUNTANT
 
-        if not self.set_all(game_number, date, accountant):
-            raise ValueError("ERROR: Problem in Casino Full Constructor.")
+        self.game_number = game_number
+        self.date = date
+        self.accountant = accountant
 
     def set_game_number(self, game_number: int) -> bool:
         if game_number >= 0:
@@ -51,7 +54,15 @@ class Casino:
     def __str__(self) -> str:
         date_str = str(self.date) if self.date else "No Date Provided"
         accountant_str = str(self.accountant) if self.accountant else "No Accountant Provided"
-        return f"Casino Stats:\nGame Number: {self.game_number}\n\nDate: {date_str}\n\nAccountant:\n{accountant_str}"
+        return f"Casino Stats:\nGame Number: {self.game_number}\nDate: {date_str}\nAccountant:\n{accountant_str}"
+
+    @abstractmethod
+    def calculate_winnings(self):
+        pass
+
+    @abstractmethod
+    def deal_cards(self):
+        pass
 
 
 # Example Usage
